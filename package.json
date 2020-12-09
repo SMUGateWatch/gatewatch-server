@@ -18,13 +18,11 @@
   },
   "homepage": "https://github.com/SMUGateWatch/gatewatch-server#readme",
   "dependencies": {
-    "express": "^4.17.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "socket.io": "^3.0.3"
+    "ws": "^7.4.1"
   },
   "engines": {
     "node": "12.13.x"
   }
-
 }

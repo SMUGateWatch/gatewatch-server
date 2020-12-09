@@ -1,26 +1,16 @@
-const express = require('express')
-const http = require('http')
-const socketIO = require('socket.io')
-const app = express()
-const server = http.createServer(app)
-const io = socketIO(server)
-const data = require('./models/registered')
 
+const http = require('http');
+const WebSocket = require('ws');
 
-io.on('connected',(socket)=>{
-    socket.on("scanId",(id)=>{
-        const isIdExist = data.filter(d => (d.schoolId === id)? true : false);
-        if (isIdExist) socket.emit("permitId",JSON.stringify(1));
-        if (isIdExist) socket.emit("permitId",JSON.stringify(0));
-        console.log("scanId is executed...");
-    });
-    
-    socket.on("manualControlLift",(control)=>{
-        let controlData = control.json()
-        if(controlData.lift.up) socket.emit("iotBarrierUp",JSON.stringify(""))
-        if(controlData.lift.down) socket.emit("iotBarrierUp",JSON.stringify(""))
-        console.log("manualControlLift is executed...");
-    });
-})
-module.exports = server;
+const server = http.createServer();
+const wss = new WebSocket.Server({ server });
 
+wss.on('connection', function connection(ws) {
+  ws.on('message', function incoming(message) {
+    console.log('received: %s', message);
+  });
+
+  ws.send('something');
+});
+
+module.exports = server
