@@ -11,10 +11,16 @@ wss.on('connection', function connection(ws) {
   ws.on('message', function incoming(data) {
     let parsedData = JSON.parse(data);
     let event = parsedData.event;
-    let receivedData = parsedData.data.idScanned;
-    if (event == "verifyID")  console.log(`ID was sent for verificaiton : ${receivedData}`);
+    let receivedData = parsedData.data;
+    if (event == "verifyID"){  
+      console.log(`ID was sent for verificaiton : ${receivedData.idScanned}`);
+      ws.send(JSON.stringify({event: "permitID", data: "verified"}));
+    }
+    if (event == "gateBusy") {
+      console.log(gate ${receivedData.gate} was set its availability to ${receivedData.availability}`);
+ 
+}
     
-    ws.send(JSON.stringify({event: "permitID", data: "verified"}));
   });
  
 
