@@ -7,9 +7,9 @@ const wss = new WebSocket.Server({ server });
 
 wss.on('connection', function connection(ws) {
   ws.on('message', function incoming(data) {
-    let parsedData = data.json();
-    console.log('received: %s', parsedData.event);
-    console.log('received: %s', parsedData.data);
+    
+    console.log('received: %s', data);
+
     ws.send('something');
   });
  
