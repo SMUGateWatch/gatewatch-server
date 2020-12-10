@@ -7,7 +7,7 @@ const wss = new WebSocket.Server({ server });
 
 wss.on('connection', function connection(ws) {
   ws.on('message', function incoming(data) {
-    let parsedData = data.json();
+    let parsedData = JSON.parse(data);
     console.log('received: %s', parsedData.data.name);
 
     ws.send(JSON.stringify({emitterEvent: "permitID", emitData: "HEYYA"}));
