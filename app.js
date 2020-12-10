@@ -17,7 +17,7 @@ wss.on('connection', function connection(ws) {
       ws.send(JSON.stringify({event: "permitID", data: "verified"}));
     }
     if (event == "gateBusy") {
-      console.log(gate ${receivedData.gate} was set its availability to ${receivedData.availability}`);
+      console.log(`gate ${receivedData.gate} was set its availability to ${receivedData.availability}`);
  
 }
     
