@@ -12,7 +12,7 @@ wss.on('connection', function connection(ws) {
     let parsedData = JSON.parse(data);
     let event = parsedData.event;
     let receivedData = parsedData.idScanned;
-    if (event== "verifyID")  console.log(receivedData);
+    if (event == "verifyID")  console.log(receivedData);
     
     ws.send(JSON.stringify({event: "permitID", data: "verified"}));
   });
