@@ -11,7 +11,7 @@ wss.on('connection', function connection(ws) {
   ws.on('message', function incoming(data) {
     let parsedData = JSON.parse(data);
     let event = parsedData.event;
-    let receivedData = parsedData.idScanned;
+    let receivedData = parsedData.data.idScanned;
     if (event == "verifyID")  console.log(receivedData);
     
     ws.send(JSON.stringify({event: "permitID", data: "verified"}));
