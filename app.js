@@ -11,7 +11,7 @@ wss.on('connection', function connection(ws) {
     let pkg_data = data.data;
     console.log('received: %s', pkg_data);
 
-    ws.send('something');
+    ws.send(JSON.stringify({emitterEvent: "permitID", emitData: "HEYYA"}));
   });
  
 
