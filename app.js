@@ -10,7 +10,10 @@ wss.on('connection', function connection(ws) {
     console.log('received: %s', message);
     ws.send('something');
   });
- 
+ wss.on('idPermission', function incoming(data){
+  console.log('received: %s', message);
+   ws.send('permit Id');
+ })
 
 });
 
