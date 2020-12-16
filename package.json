@@ -18,11 +18,16 @@
   },
   "homepage": "https://github.com/SMUGateWatch/gatewatch-server#readme",
   "dependencies": {
+    "mongodb": "^3.6.3",
+    "mongoose": "^5.11.8",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "ws": "^7.4.1"
   },
   "engines": {
     "node": "12.13.x"
+  },
+  "devDependencies": {
+    "dotenv": "^8.2.0"
   }
 }
