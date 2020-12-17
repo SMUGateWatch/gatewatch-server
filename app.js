@@ -52,17 +52,27 @@ async function main() {
 }
 main().catch(console.error);
 async function createTrafficData(client, classType, trafficData) {
-  const database = await client.db("traffic-data");
+  const database = await client.db("BlockGate");
   const result = false;
   if (classType == "STUDENT")
-    result = await database
-      .collection("student-registry")
+    res = await database
+      .collection("students")
       .insertOne(trafficData);
+      (res.insertedId)? result = true : console.log("Theres a problem witht he query")
   if (classType == "EMPLOYEE")
-    result = await database
-      .collection("employee-registry")
+    res = await database
+      .collection("employee")
       .insertOne(trafficData);
+      (res.insertedId)? result = true : console.log("Theres a problem witht he query")
   return result;
+}
+async function verifyId(client, uid){
+  const database = await client.db("BlockGate");
+  const result = false;
+  const employee = await database.collection("employee").findOne({UID: uid})
+  const student = await database.collection("students").findOne({UID: uid})
+  if (employee || student) result = true;
+  return result
 }
 wss.on("connection", function connection(ws) {
   ws.on("message", function incoming(data) {
@@ -83,7 +93,21 @@ wss.on("connection", function connection(ws) {
     console.log(connectedMonitors);
     if (event == "verifyID") {
       console.log(`ID was sent for verificaiton : ${receivedData.idScanned}`);
-      ws.send(JSON.stringify({ event: "permitID", data: "verified" }));
+      verified = false;
+      try {
+        client.connect();
+        const result = await verifyId(client,UID);
+        if (result) {
+          console.log("The ID is verified");
+          verified = true;
+        }
+      } catch (e) {
+        console.error(e);
+      } finally {
+        client.close();
+      }
+      if(verified) ws.send(JSON.stringify({ event: "permitID", data: "verified" }));
+      if(!verified) ws.send(JSON.stringify({ event: "permitID", data: "not verified" }));
     }
     if (event == "gateBusy") {
       console.log(
@@ -106,7 +130,7 @@ wss.on("connection", function connection(ws) {
       const classType = receivedData.classType;
       try {
         client.connect();
-        const result = trafficData(client, classType, {
+        const result = createTrafficData(client, classType, {
           gate: receivedData.gate,
           actionType: receivedData.actionType,
           driverName: receivedData.driverName,
