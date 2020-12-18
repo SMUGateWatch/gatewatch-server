@@ -82,6 +82,7 @@ wss.on("connection", async function connection(ws) {
         console.log(connectedGates);
       }
     });
+    main().catch(console.error);
     let parsedData = JSON.parse(data);
     let event = parsedData.event;
     let receivedData = parsedData.data;
