@@ -96,7 +96,7 @@ wss.on("connection", function connection(ws) {
       verified = false;
       try {
         client.connect();
-        const result = await verifyId(client,UID);
+        const result =  verifyId(client,UID);
         if (result) {
           console.log("The ID is verified");
           verified = true;
