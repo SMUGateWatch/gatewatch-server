@@ -10,8 +10,8 @@ const { MongoClient } = require("mongodb");
 //const {employeeRegistry, studentRegistry} = require('./models/schemas')
 const connectedMonitors = [];
 const connectedGates = [];
-
-const client = new MongoClient(process.env.MONGODB_URI, {
+const db_uri = process.env.MONGODB_URI
+const client = new MongoClient(db_uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -33,16 +33,8 @@ async function main() {
       : console.log("Server can't connect to server");
 
     await createListing(client, {
-      FirstName: "adadasdas",
-      LastName: "asdads",
-      Gender: "adsadsa",
-      SchoolId: "asdads",
-      Office: "adsaddsada",
-      Job: "adsadsadas",
-      VehicleName: " adasdasd",
-      PlateNumber: "adsadasd",
-      LicenseNumber: "adsadsda",
-      DateRegistered: "adsadasd",
+      message: "Connect to Database. Success"
+      
     });
   } catch (e) {
     console.error(e);
@@ -52,7 +44,7 @@ async function main() {
 }
 main().catch(console.error);
 async function createTrafficData(client, classType, trafficData) {
-  const database = await client.db("BlockGate");
+  const database = await client.db("agcs");
   const result = false;
   if (classType == "STUDENT")
     res = await database
@@ -67,7 +59,7 @@ async function createTrafficData(client, classType, trafficData) {
   return result;
 }
 async function verifyId(client, uid){
-  const database = await client.db("BlockGate");
+  const database = await client.db("agcs");
   const result = false;
   const employee = await database.collection("employee").findOne({UID: uid})
   const student = await database.collection("students").findOne({UID: uid})
