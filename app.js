@@ -44,7 +44,7 @@ async function main() {
 }
 main().catch(console.error);
 async function createTrafficData(client, classType, trafficData) {
-  const database = await client.db("BlockGate");
+  const database = await client.db("agcs");
   const result = false;
   if (classType == "STUDENT")
     res = await database
@@ -59,7 +59,7 @@ async function createTrafficData(client, classType, trafficData) {
   return result;
 }
 async function verifyId(client, uid){
-  const database = await client.db("BlockGate");
+  const database = await client.db("agcs");
   const result = false;
   const employee = await database.collection("employee").findOne({UID: uid})
   const student = await database.collection("students").findOne({UID: uid})
