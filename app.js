@@ -62,7 +62,7 @@ async function verifyId(client, uid) {
   const database = await client.db("agcs");
   const result = false;
   try {
-    client.connect();
+    await client.connect();
     const employee = await database
       .collection("employee")
       .findOne({ UID: uid });
