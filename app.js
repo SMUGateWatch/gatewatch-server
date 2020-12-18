@@ -1,6 +1,6 @@
 //const dotenv = require("dotenv");
 //dotenv.config();
-const http = require("http");
+//const http = require("http");
 const WebSocket = require("ws");
 //const monitoringClient = require("./lib/monitors");
 //const gate = require("./lib/gates");
@@ -10,7 +10,7 @@ const { MongoClient } = require("mongodb");
 //const {employeeRegistry, studentRegistry} = require('./models/schemas')
 const connectedMonitors = [];
 const connectedGates = [];
-const db_uri = process.env.MONGODB_URI
+const db_uri = process.env.MONGODB_URI;
 const client = new MongoClient(db_uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -33,8 +33,7 @@ async function main() {
       : console.log("Server can't connect to server");
 
     await createListing(client, {
-      message: "Connect to Database. Success"
-      
+      message: "Connect to Database. Success",
     });
   } catch (e) {
     console.error(e);
@@ -48,53 +47,64 @@ async function createTrafficData(client, classType, trafficData) {
   const database = await client.db("agcs");
   const result = false;
   if (classType == "STUDENT")
-    res = await database
-      .collection("students")
-      .insertOne(trafficData);
-      (res.insertedId)? result = true : console.log("Theres a problem witht he query")
+    res = await database.collection("students").insertOne(trafficData);
+  res.insertedId
+    ? (result = true)
+    : console.log("Theres a problem witht he query");
   if (classType == "EMPLOYEE")
-    res = await database
-      .collection("employee")
-      .insertOne(trafficData);
-      (res.insertedId)? result = true : console.log("Theres a problem witht he query")
+    res = await database.collection("employee").insertOne(trafficData);
+  res.insertedId
+    ? (result = true)
+    : console.log("Theres a problem witht he query");
   return result;
 }
-async function verifyId(client, uid){
+async function verifyId(client, uid) {
   const database = await client.db("agcs");
   const result = false;
-  const employee = await database.collection("employee").findOne({UID: uid})
-  const student = await database.collection("students").findOne({UID: uid})
-  if (employee || student) result = true;
-  return result
+  try {
+    client.connect();
+    const employee = await database
+      .collection("employee")
+      .findOne({ UID: uid });
+    const student = await database.collection("students").findOne({ UID: uid });
+    if (employee || student) result = true;
+  } catch (e) {
+    console.error(e);
+  } finally {
+    await client.close();
+  }
+
+  return result;
 }
 
 wss.on("connection", function connection(ws) {
   ws.on("message", function incoming(data) {
-    wss.clients.forEach(client=>{
-      if(client == ws){
-        isConnected = connectedGates.filter(gate => gate == ws )        
-        if(!isConnected) connectedGates.push(ws)
-        console.log(connectedGates)
+    wss.clients.forEach((client) => {
+      if (client == ws) {
+        isConnected = connectedGates.filter((gate) => gate == ws);
+        if (!isConnected) connectedGates.push(ws);
+        console.log(connectedGates);
       }
-    })
+    });
     let parsedData = JSON.parse(data);
     let event = parsedData.event;
     let receivedData = parsedData.data;
-    if (receivedData.client === "GATE") connectedGates.push(ws);
-    if (receivedData.client === "MONITOR") connectedMonitors.push(ws);
+
+    let socketClient = receivedData.client;
+    
+    if (socketClient === "GATE") connectedGates.push(ws);
+    if (socketClient === "MONITOR") connectedMonitors.push(ws);
 
     console.log(connectedGates);
     console.log(connectedMonitors);
     if (event == "verifyID") {
-      console.log(`ID was sent for verificaiton : ${receivedData.idScanned}`);
-      verified = false;
-        client.connect();
-        const result =  verifyId(client,UID);
-        if (result) {
-          console.log("The ID is verified");
-          verified = true;}     
-      if(verified) ws.send(JSON.stringify({ event: "permitID", data: "verified" }));
-      if(!verified) ws.send(JSON.stringify({ event: "permitID", data: "not verified" }));
+      let id = receivedData.idScanned
+      console.log(`ID was sent for verificaiton : ${id}`);      
+      const result = verifyId(client, id);     
+    if (result)
+        ws.send(JSON.stringify({ event: "permitID", data: "verified" }));
+      if (!result)
+        ws.send(JSON.stringify({ event: "permitID", data: "not verified" }));
     }
     if (event == "gateBusy") {
       console.log(
@@ -141,7 +151,7 @@ wss.on("connection", function connection(ws) {
       });
     }
   });
-  ws.on('close', () => console.log('Client disconnected'));
+  ws.on("close", () => console.log("Client disconnected"));
 });
 
 module.exports = server;
