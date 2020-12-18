@@ -31,15 +31,12 @@ async function main() {
     client.isConnected()
       ? console.log("Server successfully connected to the database")
       : console.log("Server can't connect to server");
-
     await createListing(client, {
       message: "Connect to Database. Success",
     });
   } catch (e) {
     console.error(e);
-  } finally {
-    await client.close();
-  }
+  } 
 }
 main().catch(console.error);
 
@@ -70,8 +67,6 @@ async function verifyId(client, uid) {
     if (employee || student) result = true;
   } catch (e) {
     console.error(e);
-  } finally {
-    await client.close();
   }
 
   return result;
