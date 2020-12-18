@@ -1,6 +1,6 @@
 //const dotenv = require("dotenv");
 //dotenv.config();
-//const http = require("http");
+const http = require("http");
 const WebSocket = require("ws");
 //const monitoringClient = require("./lib/monitors");
 //const gate = require("./lib/gates");
@@ -91,7 +91,7 @@ wss.on("connection", function connection(ws) {
     let receivedData = parsedData.data;
 
     let socketClient = receivedData.client;
-    
+
     if (socketClient === "GATE") connectedGates.push(ws);
     if (socketClient === "MONITOR") connectedMonitors.push(ws);
 
