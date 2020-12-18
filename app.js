@@ -78,7 +78,7 @@ async function verifyId(client, uid) {
 }
 
 wss.on("connection", async function connection(ws) {
-  ws.on("message", function incoming(data) {
+  ws.on("message", async function incoming(data) {
     wss.clients.forEach((client) => {
       if (client == ws) {
         isConnected = connectedGates.filter((gate) => gate == ws);
