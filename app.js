@@ -13,7 +13,7 @@ const connectedGates = [];
 const db_uri = process.env.MONGODB_URI;
 const client = new MongoClient(db_uri, {
   useNewUrlParser: true,
-  useUnifiedTopology: true,
+  //useUnifiedTopology: true,
 });
 async function createListing(client, newListing) {
   const result = await client
