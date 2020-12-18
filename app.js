@@ -1,5 +1,5 @@
-//const dotenv = require("dotenv");
-//dotenv.config();
+const dotenv = require("dotenv");
+dotenv.config();
 const http = require("http");
 const WebSocket = require("ws");
 //const monitoringClient = require("./lib/monitors");
@@ -146,7 +146,7 @@ wss.on("connection", function connection(ws) {
       });
     }
   });
-  ws.on("disconnect", () => {});
+  
 });
 
 module.exports = server;
