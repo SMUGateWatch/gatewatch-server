@@ -43,6 +43,7 @@ async function main() {
   }
 }
 main().catch(console.error);
+
 async function createTrafficData(client, classType, trafficData) {
   const database = await client.db("agcs");
   const result = false;
@@ -66,6 +67,7 @@ async function verifyId(client, uid){
   if (employee || student) result = true;
   return result
 }
+
 wss.on("connection", function connection(ws) {
   ws.on("message", function incoming(data) {
     wss.clients.forEach(client=>{
@@ -86,18 +88,11 @@ wss.on("connection", function connection(ws) {
     if (event == "verifyID") {
       console.log(`ID was sent for verificaiton : ${receivedData.idScanned}`);
       verified = false;
-      try {
         client.connect();
         const result =  verifyId(client,UID);
         if (result) {
           console.log("The ID is verified");
-          verified = true;
-        }
-      } catch (e) {
-        console.error(e);
-      } finally {
-        client.close();
-      }
+          verified = true;}     
       if(verified) ws.send(JSON.stringify({ event: "permitID", data: "verified" }));
       if(!verified) ws.send(JSON.stringify({ event: "permitID", data: "not verified" }));
     }
