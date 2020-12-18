@@ -15,6 +15,8 @@ const client = new MongoClient(db_uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+
+ client.connect();
 async function createListing(client, newListing) {
   const result = await client
     .db("vehicle-registry")
@@ -27,7 +29,6 @@ async function createListing(client, newListing) {
 async function main() {
   try {
     // Connect to the MongoDB cluster
-    await client.connect();
     client.isConnected()
       ? console.log("Server successfully connected to the database")
       : console.log("Server can't connect to server");
@@ -59,7 +60,7 @@ async function verifyId(client, uid) {
   const database = await client.db("agcs");
   const result = false;
   try {
-    await client.connect();
+    
     const employee = await database
       .collection("employee")
       .findOne({ UID: uid });
