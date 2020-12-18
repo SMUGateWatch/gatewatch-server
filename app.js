@@ -13,7 +13,7 @@ const connectedGates = [];
 const db_uri = process.env.MONGODB_URI;
 const client = new MongoClient(db_uri, {
   useNewUrlParser: true,
-  //useUnifiedTopology: true,
+  useUnifiedTopology: true,
 });
 async function createListing(client, newListing) {
   const result = await client
@@ -77,7 +77,7 @@ async function verifyId(client, uid) {
   return result;
 }
 
-wss.on("connection", function connection(ws) {
+wss.on("connection", async function connection(ws) {
   ws.on("message", function incoming(data) {
     wss.clients.forEach((client) => {
       if (client == ws) {
@@ -100,7 +100,7 @@ wss.on("connection", function connection(ws) {
     if (event == "verifyID") {
       let id = receivedData.idScanned
       console.log(`ID was sent for verificaiton : ${id}`);      
-      const result = verifyId(client, id);     
+      const result = await verifyId(client, id);     
     if (result)
         ws.send(JSON.stringify({ event: "permitID", data: "verified" }));
       if (!result)
