@@ -146,7 +146,7 @@ wss.on("connection", function connection(ws) {
       });
     }
   });
-  
+  ws.on('close', () => console.log('Client disconnected'));
 });
 
 module.exports = server;
