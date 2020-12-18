@@ -10,8 +10,8 @@ const { MongoClient } = require("mongodb");
 //const {employeeRegistry, studentRegistry} = require('./models/schemas')
 const connectedMonitors = [];
 const connectedGates = [];
-
-const client = new MongoClient(process.env.MONGODB_URI, {
+const db_uri = process.env.MONGODB_URI
+const client = new MongoClient(db_uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -33,16 +33,8 @@ async function main() {
       : console.log("Server can't connect to server");
 
     await createListing(client, {
-      FirstName: "adadasdas",
-      LastName: "asdads",
-      Gender: "adsadsa",
-      SchoolId: "asdads",
-      Office: "adsaddsada",
-      Job: "adsadsadas",
-      VehicleName: " adasdasd",
-      PlateNumber: "adsadasd",
-      LicenseNumber: "adsadsda",
-      DateRegistered: "adsadasd",
+      message: "Connect to Database. Success"
+      
     });
   } catch (e) {
     console.error(e);
